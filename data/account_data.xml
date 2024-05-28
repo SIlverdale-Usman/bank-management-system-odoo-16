@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="seq_account_code" model="ir.sequence">
+        <field name="name">Account Number</field>
+        <field name="code">bank.account</field>
+        <field name="padding">8</field>
+    </record>
+
+
+</odoo>

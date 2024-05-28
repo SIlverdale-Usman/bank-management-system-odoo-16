@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+bank.access_bank_bank,access_bank_bank,bank.model_bank_bank,base.group_user,1,1,1,1
+bank.access_bank_branch,access_bank_branch,bank.model_bank_branch,base.group_user,1,1,1,1
+bank.access_bank_customer,access_bank_customer,bank.model_bank_customer,base.group_user,1,1,1,1
+bank.access_bank_account,access_bank_account,bank.model_bank_account,base.group_user,1,1,1,1
+bank.access_bank_card,access_bank_card,bank.model_bank_card,base.group_user,1,1,1,1
+bank.access_bank_transaction,access_bank_transaction,bank.model_bank_transaction,base.group_user,1,1,1,1
+bank.access_bank_complaint,access_bank_complaint,bank.model_bank_complaint,base.group_user,1,1,1,1
+bank.access_bank_complaint_tag,access_bank_complaint_tag,bank.model_bank_complaint_tag,base.group_user,1,1,1,1
+bank.access_bank_assistant,access_bank_assistant,bank.model_bank_assistant,base.group_user,1,1,1,1
+bank.access_bank_loan_type,access_bank_loan_type,bank.model_bank_loan_type,base.group_user,1,1,1,1
+bank.access_bank_loan_account,access_bank_loan_account,bank.model_bank_loan_account,base.group_user,1,1,1,1
+bank.access_bank_loan_payment,access_bank_loan_payment,bank.model_bank_loan_payment,base.group_user,1,1,1,1

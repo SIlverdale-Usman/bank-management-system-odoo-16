@@ -1,0 +1,170 @@
+<odoo>
+    <data>
+
+        <!-- activity view-->
+
+        <record id="bank_complaint_view_activity" model="ir.ui.view">
+            <field name="name">bank.complaint.view.activity</field>
+            <field name="model">bank.complaint</field>
+            <field name="arch" type="xml">
+                <activity string="Tickets">
+                    <field name="account_id"/>
+                    <templates>
+                        <div t-name="activity-box">
+                            <div>
+                                <field name="account_id" display="full"/>
+                                <field name="name" display="full"/>
+                            </div>
+                        </div>
+                    </templates>
+                </activity>
+            </field>
+        </record>
+
+        <!-- explicit list view definition -->
+
+
+        <record model="ir.ui.view" id="bank_complaint_view_list">
+            <field name="name">bank.complaint.view.list</field>
+            <field name="model">bank.complaint</field>
+            <field name="arch" type="xml">
+                <tree sample="1" class="text-center">
+
+                    <field name="priority" widget="priority"/>
+
+                    <field name="date_created"/>
+                    <field name="name"/>
+                    <field name="subject"/>
+                    <field name="description" optional="hide"/>
+                    <field name="account_id" optional="show"/>
+                    <field name="assigned_to" optional="hide"/>
+                    <field name="activity_ids" widget="list_activity"/>
+
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
+                    <field name="state" widget="badge" decoration-success="state == 'resolved'"
+                           decoration-info="state == 'in_progress'"
+                           decoration-danger="state == 'cancelled'"
+                           decoration-muted="state == 'draft'"
+                    />
+                    <field name="branch_id" optional="hide"/>
+                    <field name="bank_id" optional="hide"/>
+
+                </tree>
+            </field>
+        </record>
+
+        <!-- explicit form view definition -->
+
+        <record model="ir.ui.view" id="bank_complaint_view_form">
+            <field name="name">bank.complaint.view.form</field>
+            <field name="model">bank.complaint</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+
+                        <button name="action_in_progress" string="In Progress" type="object"
+                                confirm="Are you sure you want to mark following ticket as in progress" states="draft"
+                        />
+                        <!-- states attribute allow to show required button only during state criteria is met-->
+                        <button name="action_resolved" string="Issue Resolved" type="object"
+                                confirm="Are you sure you want to mark appointment as done" states="in_progress"
+                                class="oe_highlight"
+                        />
+
+                        <button name="action_cancel" string="Cancel Ticket" type="object"
+                                confirm="Are you sure you want to cancel ticket" states="draft,in_progress"/>
+
+                        <button name="action_send_email" string="Send Email" type="object" icon="fa-mail-forward"/>
+
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,in_progress,resolved"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h2>
+                                <field name="priority" widget="priority"/>
+                            </h2>
+                            <h2>
+                                <field name="name" readonly="1"/>
+                            </h2>
+                        </div>
+                        <group>
+                            <group string="Ticket Information">
+
+                                <field name="subject"/>
+                                <field name="description"/>
+                                <field name="date_created"/>
+                                <field name="assigned_to" widget="selection"/>
+                                <field name="tag_ids" widget="many2many_tags"
+                                       options="{'no_create': True,'color_field': 'color'}"/>
+
+                            </group>
+
+                            <group string="Related Customer Information">
+
+                                <field name="account_id" widget="selection"/>
+                                <field name="customer_id" readonly="1"/>
+                                <field name="branch_id" readonly="1"/>
+                                <field name="bank_id" readonly="1"/>
+
+                            </group>
+
+                        </group>
+
+                        <!-- Chatter -->
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids"/>
+                            <field name="activity_ids"/>
+                            <field name="message_ids"/>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- explicit search view definition -->
+
+
+        <record id="bank_complaint_view_search" model="ir.ui.view">
+            <field name="name">bank.complaint.view.search</field>
+            <field name="model">bank.complaint</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="account_id" string="Account Title"
+                           filter_domain="[('account_id','ilike',self)]"/>
+
+                    <searchpanel>
+                        <field name="branch_id" string="Branch Account" enable_counters="1" icon="fa-map-marker"
+                               select="multi"/>
+                        <field name="bank_id" string="Bank Account" enable_counters="1" icon=" fa-bank" select="multi"/>
+
+
+                    </searchpanel>
+                </search>
+            </field>
+        </record>
+
+
+        <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="bank_complaint_action_window">
+            <field name="name">Tickets</field>
+            <field name="res_model">bank.complaint</field>
+            <field name="view_mode">tree,form,activity</field>
+
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first ticket
+                </p>
+            </field>
+        </record>
+
+
+        <!-- actions -->
+
+        <menuitem name="Tickets" id="bank_complaint_menu_action" parent="complaints_menu_master"
+                  action="bank_complaint_action_window"/>
+
+
+    </data>
+</odoo>

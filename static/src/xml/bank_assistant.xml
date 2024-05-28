@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="bank.assistantTemplate" owl="1">
+        <div style="display:flex;
+                    justify-content:center;
+                    padding:50px 30px ;"
+        >
+
+            <div style="width:550px; max-height:800px; overflow-y: auto;">
+                <div t-foreach="state.queryList" t-as="query" t-key="query.id">
+                     <div style="background-color: #f4f4f4; border-radius:10px; padding:5px 10px;
+                            display:flex;
+                            text-align:center;
+                            align-items:center;">
+                    <p style="text-align:center; margin:2px;" t-esc="query.question"/>
+                    </div>
+                    <div style="padding:5px; margin:10px 0px;">
+                    <div t-raw="query.answer"></div>
+                    </div>
+                </div>
+            </div>
+
+
+            <form style="position: absolute;
+                          bottom: 30px;
+                          width:650px;">
+                <input style="border-radius:5px; width:540px; display:inline;"
+                       type="text" class="form-control" id="name"
+                       t-model="state.query.question"
+                       t-att-value="state.query.question"
+                       placeholder="Ask anything from AI Assistant..."
+                />
+                <button t-if="buttonState" type="button" class="btn btn-primary" t-on-click="askAi"
+                        style="margin: 5px; width:65px; display:inline;">Ask AI </button>
+
+                <t t-elif="buttonState == false">
+                    <p style="margin: 5px; width:65px; display:inline;">Generating ... </p>
+                </t>
+            </form>
+        </div>
+
+    </t>
+
+</templates>

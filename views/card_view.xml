@@ -1,0 +1,125 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+        <record model="ir.ui.view" id="bank_card_view_list">
+            <field name="name">bank.card.view.list</field>
+            <field name="model">bank.card</field>
+            <field name="arch" type="xml">
+                <tree sample="1" class="text-center">
+                    <field name="title"/>
+                    <field name="card_type"/>
+                    <field name="customer_id"/>
+                    <field name="bank_id"/>
+                    <field name="account_id" optional="show"/>
+                    <field name="card_limit" optional="show"/>
+                    <field name="expiry_date" optional="hide"/>
+                    <field name="card_number" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <!-- explicit form view definition -->
+
+        <record model="ir.ui.view" id="bank_card_view_form">
+            <field name="name">bank.card.view.form</field>
+            <field name="model">bank.card</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+
+                        <button name="action_block" string="Block Card" type="object"
+                                confirm="Are you sure you want to block the card" states="active" class="oe_highlight"/>
+
+
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="active,block"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="title" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Card Details">
+
+                                <field name="card_type"/>
+                                <field name="customer_id" readonly="1"/>
+                                <field name="account_id" widget="selection"/>
+                                <field name="card_limit" readonly="1"/>
+                                <field name="expiry_date" readonly="1"/>
+                                <field name="card_number" readonly="1"/>
+                                <field name="bank_id" readonly="1"/>
+
+                            </group>
+
+                        </group>
+                        <notebook>
+                            <page string="Related Customer" name="related_customer">
+                                <field name="customer_id" readonly="1"/>
+
+                            </page>
+                            <page string="Related Branch" name="related_branch">
+                                <field name="branch_id" readonly="1"/>
+
+                            </page>
+
+                        </notebook>
+
+                        <!-- Chatter -->
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids"/>
+                            <field name="activity_ids"/>
+                            <field name="message_ids"/>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <!-- explicit search view definition -->
+
+
+        <record id="bank_card_view_search" model="ir.ui.view">
+            <field name="name">bank.card.view.search</field>
+            <field name="model">bank.card</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="customer_id" string="Card Holder Name" filter_domain="[('customer_id','ilike',self)]"/>
+                    <field name="title" string="Card Title" filter_domain="[('title','ilike',self)]"/>
+
+                    <searchpanel>
+                        <field name="card_type" string="Card Type" enable_counters="1" icon="fa-credit-card-alt"
+                               select="multi"/>
+                        <field name="bank_id" string="Bank" enable_counters="1" icon="fa-bank" select="multi"/>
+                    </searchpanel>
+                </search>
+            </field>
+        </record>
+
+
+        <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="bank_card_action_window">
+            <field name="name">Cards</field>
+            <field name="res_model">bank.card</field>
+            <field name="view_mode">tree,form</field>
+
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first card
+                </p>
+            </field>
+        </record>
+
+
+        <!-- actions -->
+
+        <menuitem name="Cards" id="bank_card_menu_action" parent="products_menu_master"
+                  action="bank_card_action_window"/>
+
+
+    </data>
+</odoo>

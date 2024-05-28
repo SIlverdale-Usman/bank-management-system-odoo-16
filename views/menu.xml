@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="bank_menu_root"
+              name="Bank"
+              web_icon="bank,static/description/icon.png"
+              sequence="0"
+    />
+
+    <menuitem id="bank_menu_master"
+              name="Bank Management"
+              parent="bank_menu_root"
+              sequence="0"
+    />
+
+    <menuitem id="customer_menu_master"
+              name="Customer Management"
+              parent="bank_menu_root"
+              sequence="10"
+    />
+
+    <menuitem id="products_menu_master"
+              name="Products"
+              parent="bank_menu_root"
+              sequence="20"
+    />
+
+    <menuitem id="transaction_menu_master"
+              name="Transactions"
+              parent="bank_menu_root"
+              sequence="30"
+    />
+    <menuitem id="complaints_menu_master"
+              name="Complaints"
+              parent="bank_menu_root"
+              sequence="40"
+    />
+    <menuitem id="help_desk_menu_master"
+              name="Help Desk"
+              parent="bank_menu_root"
+              sequence="50"
+    />
+
+    <menuitem name="Loans" sequence="10" id="bank_loan_type_main" parent="products_menu_master"/>
+</odoo>

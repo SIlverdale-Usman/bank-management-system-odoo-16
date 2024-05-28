@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="customer_card_report_template">
+        <t t-call="web.basic_layout">
+            <div class="page">
+                <t t-foreach="docs" t-as="doc">
+
+                    <div style="display:flex; justify-content:center; align-items:center; ">
+                        <div style="height:160pt; border:1pt solid black; border-collapse:separate; border-radius:8pt; padding:20px;">
+                            <div style="text-align:right;">
+                                <p t-esc="doc.bank_id.name"/>
+                            </div>
+
+                            <div style="display:flex; justify-content:center; align-items:center;">
+                                <h4 t-esc="doc.card_number_formatted"/>
+
+                            </div>
+
+                            <img t-att-src="'/report/barcode/EAN13/%s'%(doc.account_id)" width="400" height="30"
+                                 alt="Barcode"/>
+
+                            <div style="display:flex; justify-content:center; align-items:center; margin-top:10px; height:30px;">
+                                <p style="margin-right:20px;">Valid</p>
+                                <p t-esc="doc.expiry_date"/>
+                            </div>
+
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <h5 t-esc="doc.title"/>
+                                <h5 t-if="doc.card_type == 'master'">MASTER</h5>
+                                <h5 t-if="doc.card_type == 'visa'">VISA</h5>
+                            </div>
+
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </t>
+
+    </template>
+
+    <record id="customer_card_report_action_template" model="ir.actions.report">
+        <field name="name">Customer Credit Card</field>
+        <field name="model">bank.card</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">bank.customer_card_report_template</field>
+        <field name="report_file">bank.customer_card_report_template</field>
+        <field name="print_report_name">'Customer Card'</field>
+        <field name="binding_model_id" ref="bank.model_bank_card"/>
+        <field name="binding_type">report</field>
+
+    </record>
+
+</odoo>

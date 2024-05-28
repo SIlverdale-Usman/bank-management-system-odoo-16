@@ -1,0 +1,48 @@
+<odoo>
+    <data>
+
+        <!-- explicit form view definition -->
+
+        <record model="ir.ui.view" id="hr_employee_form_inherit">
+            <field name="name">hr.employee.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='company_country_id']" position="before">
+                    <field name="bank_id" widget="selection"/>
+                </xpath>
+
+                <xpath expr="//field[@name='address_id']" position="replace">
+                    <field name="branch_id" widget="selection" domain="[('bank_id', '=', bank_id)]"/>
+                </xpath>
+
+                <xpath expr="//field[@name='work_location_id']" position="replace">
+                    <field name="branch_city"/>
+                </xpath>
+            </field>
+        </record>
+
+         <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="hr_employee_action_window">
+            <field name="name">Employees</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_mode">kanban,list,form</field>
+
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first employee
+                </p>
+            </field>
+        </record>
+
+
+        <!-- actions -->
+
+        <menuitem name="Employees" id="bank_employee_menu_action" parent="bank_menu_master"
+                  action="hr_employee_action_window"/>
+
+    </data>
+</odoo>

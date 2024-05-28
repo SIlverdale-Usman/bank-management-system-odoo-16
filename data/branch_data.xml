@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="seq_branch_code" model="ir.sequence">
+        <field name="name">Branch Code</field>
+        <field name="code">bank.branch</field>
+        <field name="prefix">0</field>
+        <field name="padding">3</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,71 @@
+<odoo>
+    <data>
+
+
+        <!-- explicit list view definition -->
+
+
+        <record model="ir.ui.view" id="bank_complaint_tag_view_list">
+            <field name="name">bank.complaint.tag.view.list</field>
+            <field name="model">bank.complaint.tag</field>
+            <field name="arch" type="xml">
+                <tree sample="1" class="text-center">
+
+                    <field name="name"/>
+                    <field name="color" widget="color_picker"/>
+
+                </tree>
+            </field>
+        </record>
+
+        <!-- explicit form view definition -->
+
+        <record model="ir.ui.view" id="bank_complaint_tag_view_form">
+            <field name="name">bank.complaint.tag.view.form</field>
+            <field name="model">bank.complaint.tag</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group string="Tag Information">
+
+                                <field name="name"/>
+                                <field name="color" widget="color_picker"/>
+
+                            </group>
+                        </group>
+
+                        <!-- Chatter -->
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids"/>
+                            <field name="activity_ids"/>
+                            <field name="message_ids"/>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="bank_complaint_tag_action_window">
+            <field name="name">Complaint Tags</field>
+            <field name="res_model">bank.complaint.tag</field>
+            <field name="view_mode">tree,form</field>
+
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first tag
+                </p>
+            </field>
+        </record>
+
+
+        <!-- actions -->
+
+        <menuitem name="Complaint Tags" id="bank_complaint_tag_menu_action" parent="complaints_menu_master"
+                  action="bank_complaint_tag_action_window"/>
+
+
+    </data>
+</odoo>

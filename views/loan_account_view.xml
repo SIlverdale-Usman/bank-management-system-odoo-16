@@ -1,0 +1,142 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+
+        <record model="ir.ui.view" id="bank_loan_account_view_list">
+            <field name="name">bank.loan.account.view.list</field>
+            <field name="model">bank.loan.account</field>
+
+            <field name="arch" type="xml">
+                <tree sample="1" class="text-center">
+                    <field name="name"/>
+                    <field name="account_id" optional="show"/>
+                    <field name="loan_type_id" optional="show"/>
+                    <field name="loan_amount" optional="hide"/>
+                    <field name="interest_rate" optional="show"/>
+                    <field name="term_years" optional="show"/>
+                    <field name="monthly_payment" optional="hide"/>
+                    <field name="state" optional="show" widget="badge" decoration-success="state == 'paid'"
+                           decoration-info="state == 'approved'"
+                           decoration-danger="state == 'rejected'"
+                           decoration-muted="state == 'draft'"
+                    />
+                </tree>
+            </field>
+        </record>
+
+        <!-- explicit form view definition -->
+
+        <record model="ir.ui.view" id="bank_loan_account_view_form">
+            <field name="name">bank.loan.account.view.form</field>
+            <field name="model">bank.loan.account</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_approved" string="Approve Loan Request" type="object"
+                                confirm="Are you sure you want to mark following loan as approved" states="draft"
+                        />
+                        <!-- states attribute allow to show required button only during state criteria is met-->
+                        <button name="action_paid" string="Loan Paid" type="object"
+                                confirm="Are you sure you want to mark loan as paid" states="approved"
+                                class="oe_highlight"
+                        />
+
+                        <button name="action_reject" string="Reject Loan Request" type="object"
+                                confirm="Are you sure you want to reject loan" states="draft,approved"/>
+
+
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,approved,rejected,paid"/>
+                    </header>
+                    <sheet>
+
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+
+                        </div>
+                        <group>
+                            <group string="Loan Bank Information">
+                                <field name="bank_id" widget="selection"/>
+                                <field name="loan_type_id" widget="selection" domain="[('bank_id', '=', bank_id)]"/>
+                                <field name="interest_rate"/>
+                                <field name="term_years"/>
+                            </group>
+
+                            <group string="Loan Account Information">
+                                <field name="account_id" widget="selection"/>
+
+                                <field name="currency_id" invisible="1"/>
+                                <field name="loan_amount" widget="monetary"/>
+                                <field name="monthly_payment" widget="monetary"/>
+
+
+                            </group>
+
+                        </group>
+
+
+                    </sheet>
+                    <!-- Chatter -->
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- explicit search view definition -->
+
+
+        <record id="bank_loan_account_view_search" model="ir.ui.view">
+            <field name="name">bank.loan.account.view.search</field>
+            <field name="model">bank.loan.account</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="Loan Type Name" filter_domain="[('name','ilike',self)]"/>
+                    <field name="account_id" string="Related Account" filter_domain="[('account_id','ilike',self)]"/>
+
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_term_years" string="Term Years" context="{'group_by':'term_years'}"/>
+
+                    </group>
+                    <group expand="0" string="Group By">
+                        <filter name="group_interest_rate" string="Interest Rate"
+                                context="{'group_by':'interest_rate'}"/>
+
+                    </group>
+
+                    <searchpanel>
+                        <field name="state" string="Loan State" enable_counters="1" icon=" fa-check" select="multi"/>
+                    </searchpanel>
+                </search>
+            </field>
+        </record>
+
+
+        <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="bank_loan_account_action_window">
+            <field name="name">Account Loans</field>
+            <field name="res_model">bank.loan.account</field>
+            <field name="view_mode">tree,form</field>
+
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first loan for an account
+                </p>
+            </field>
+        </record>
+
+
+        <!-- actions -->
+
+        <menuitem name="Account Loans" id="bank_loan_account_menu_action" parent="bank_loan_type_main"
+                  action="bank_loan_account_action_window"/>
+
+    </data>
+</odoo>

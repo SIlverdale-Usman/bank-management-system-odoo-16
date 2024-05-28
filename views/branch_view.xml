@@ -1,0 +1,93 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+        <record model="ir.ui.view" id="bank_branch_view_tree">
+            <field name="name">bank.branch.view.tree</field>
+            <field name="model">bank.branch</field>
+            <field name="arch" type="xml">
+                <tree sample="1" class="text-center">
+                    <field name="name"/>
+                    <field name="address"/>
+                    <field name="phone_no"/>
+                    <field name="bank_id"/>
+                    <field name="city"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- explicit list form definition -->
+
+        <record model="ir.ui.view" id="bank_branch_view_form">
+            <field name="name">bank.branch.view.form</field>
+            <field name="model">bank.branch</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="branch_code" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="name"/>
+                            <field name="address"/>
+                            <field name="phone_no" widget="phone"/>
+                            <field name="bank_id" widget="selection"/>
+                            <field name="city"/>
+                        </group>
+
+                    </sheet>
+                    <!-- Chatter -->
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- explicit list search definition -->
+
+
+        <record id="bank_branch_view_search" model="ir.ui.view">
+            <field name="name">bank.branch.view.search</field>
+            <field name="model">bank.branch</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="Branch Name" filter_domain="[('name','ilike',self)]"/>
+                    <field name="city" string="Branch City" filter_domain="[('city','ilike',self)]"/>
+
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_city" string="City" context="{'group_by':'city'}"/>
+                    </group>
+
+                    <searchpanel>
+                        <field name="bank_id" string="Bank" enable_counters="1" icon="fa-bank" select="multi"/>
+                    </searchpanel>
+                </search>
+            </field>
+        </record>
+
+        <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="bank_branch_action_window">
+            <field name="name">Branches</field>
+            <field name="res_model">bank.branch</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first branch
+                </p>
+            </field>
+        </record>
+
+
+        <!-- actions -->
+
+        <menuitem name="Branches" id="bank_branch_menu_action" parent="bank_menu_master"
+                  action="bank_branch_action_window"/>
+
+
+    </data>
+</odoo>

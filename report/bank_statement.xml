@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="customer_bank_statement_report_template">
+        <t t-call="web.basic_layout">
+            <div class="page">
+                <t t-foreach="docs" t-as="doc">
+                    <div class="oe_structure"/>
+                    <h3>
+                        <span t-field="doc.bank_id.name"/>
+                    </h3>
+
+                    <div class="row mt-4 mb-4">
+                        <div class="col-3">
+                            <p t-field="doc.branch_id.address"/>
+                        </div>
+
+                        <div class="col-auto col-3">
+                            <!--EMPTY-->
+                        </div>
+
+                        <div class="col-3">
+                            <!--EMPTY-->
+                        </div>
+
+                        <div class="col-auto col-3">
+                            <strong>Account No</strong>
+                            <p t-field="doc.account_number"/>
+
+                            <strong>Statement Period</strong>
+                            <p>Till
+                                <span t-field="doc.opening_date"/>
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <t t-if="doc.transaction_ids">
+                        <table class="table table-sm o_main_table" name="reservation">
+                            <thead>
+                                <tr>
+                                    <th class="text-left">
+                                        <span>Date</span>
+                                    </th>
+                                    <th class="text-center">
+                                        <span>Description</span>
+                                    </th>
+                                    <th class="text-center">
+                                        <span>Transaction No</span>
+                                    </th>
+                                    <th class="text-center">
+                                        <span>Transaction Type</span>
+                                    </th>
+                                    <th class="text-center">
+                                        <span>Transaction Method</span>
+                                    </th>
+                                    <th class="text-right">
+                                        <span>Amount</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <t t-set="total" t-value="0"/>
+
+                            <t t-foreach="doc.transaction_ids" t-as="line">
+                                <tr>
+                                    <td class="text-left">
+                                        <span t-field="line.date"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="line.title"/>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <span t-field="line.transaction_no"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="line.transaction_type"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="line.transaction_method"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="line.amount"/>
+                                    </td>
+                                    <t t-set="total" t-value="total+line.amount"/>
+
+                                </tr>
+                            </t>
+                            <tr>
+                                <tfoot>
+                                    <td class="text-left">
+
+                                    </td>
+                                    <td colspan="2" class="text-center">
+                                        <strong>Totals</strong>
+                                    </td>
+                                    <td colspan="2" class="text-center">
+                                        <span t-esc="total"/>
+                                    </td>
+
+                                </tfoot>
+
+                            </tr>
+                        </table>
+                    </t>
+
+                </t>
+            </div>
+        </t>
+
+    </template>
+
+    <record id="customer_card_report_action_template" model="ir.actions.report">
+        <field name="name">Customer Bank Statement</field>
+        <field name="model">bank.account</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">bank.customer_bank_statement_report_template</field>
+        <field name="report_file">bank.customer_bank_statement_report_template</field>
+        <field name="print_report_name">'Customer Bank Statement'</field>
+        <field name="binding_model_id" ref="bank.model_bank_account"/>
+        <field name="binding_type">report</field>
+
+    </record>
+
+</odoo>

@@ -1,0 +1,95 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+
+        <record model="ir.ui.view" id="bank_loan_payment_view_list">
+            <field name="name">bank.loan.payment.view.list</field>
+            <field name="model">bank.loan.payment</field>
+
+            <field name="arch" type="xml">
+                <tree sample="1" class="text-center">
+                    <field name="account_id"/>
+                    <field name="loan_account_id"/>
+                    <field name="payment_date" optional="show"/>
+                    <field name="amount" optional="show"/>
+                    <field name="loan_paid" optional="show"/>
+                    <field name="remaining_amount" optional="show"/>
+
+                </tree>
+            </field>
+        </record>
+
+        <!-- explicit form view definition -->
+
+        <record model="ir.ui.view" id="bank_loan_payment_view_form">
+            <field name="name">bank.loan.payment.view.form</field>
+            <field name="model">bank.loan.payment</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group string="Loan Payment Information">
+                                <field name="account_id" widget="selection"/>
+                                <field name="loan_account_id" widget="selection"
+                                       domain="[('account_id', '=', account_id)]"/>
+                                <field name="payment_date"/>
+                                <field name="amount"/>
+
+                                <field name="currency_id" invisible="1"/>
+
+                                <field name="loan_paid" readonly="1" widget="monetary"/>
+                                <field name="remaining_amount" readonly="1" widget="monetary"/>
+                            </group>
+                        </group>
+
+                    </sheet>
+                    <!-- Chatter -->
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- explicit search view definition -->
+
+
+        <record id="bank_loan_payment_view_search" model="ir.ui.view">
+            <field name="name">bank.loan.payment.view.search</field>
+            <field name="model">bank.loan.payment</field>
+            <field name="arch" type="xml">
+                <search>
+
+                    <searchpanel>
+
+                    </searchpanel>
+                </search>
+            </field>
+        </record>
+
+
+        <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="bank_loan_payment_action_window">
+            <field name="name">Loan Payments</field>
+            <field name="res_model">bank.loan.payment</field>
+            <field name="view_mode">tree,form</field>
+
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first payment for loan
+                </p>
+            </field>
+        </record>
+
+
+        <!-- actions -->
+
+        <menuitem name="Loan Payments" id="bank_loan_payment_menu_action" parent="bank_loan_type_main"
+                  action="bank_loan_payment_action_window"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,16 @@
+<odoo>
+    <data>
+
+        <record id="bank_assistant_action" model="ir.actions.client">
+            <field name="name">AI Assistant</field>
+            <field name="tag">bank.assistantAction</field>
+        </record>
+
+
+        <!-- actions -->
+
+        <menuitem name="AI Assistant" id="bank_assistant_menu_action" parent="help_desk_menu_master"
+                  action="bank_assistant_action"/>
+
+    </data>
+</odoo>

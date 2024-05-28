@@ -1,0 +1,136 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+
+        <record model="ir.ui.view" id="bank_transaction_view_list">
+            <field name="name">bank.transaction.view.list</field>
+            <field name="model">bank.transaction</field>
+            <field name="arch" type="xml">
+                <tree sample="1" class="text-center">
+                    <field name="date" optional="hide"/>
+                    <field name="title"/>
+                    <field name="transaction_type"/>
+                    <field name="transaction_method"/>
+                    <field name="transaction_no" optional="hide"/>
+                    <field name="amount" sum="Total Transaction Amount"/>
+                    <field name="account_id"/>
+                    <field name="account_title" optional="hide"/>
+                    <field name="branch_id" optional="hide"/>
+                    <field name="bank_id" optional="hide"/>
+
+                </tree>
+            </field>
+        </record>
+
+        <!-- explicit form view definition -->
+
+        <record model="ir.ui.view" id="bank_transaction_view_form">
+            <field name="name">bank.transaction.view.form</field>
+            <field name="model">bank.transaction</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="transaction_no" readonly="1"/>
+                            </h1>
+
+                        </div>
+                        <group>
+                            <group string="Transaction Information">
+                                <field name="title"/>
+                                <field name="date" readonly="1"/>
+
+                                <field name="transaction_type" widget="radio"/>
+
+                                <field name="transaction_method" widget="radio"
+                                       attrs="{'invisible':[('transaction_type','=','bank_transfer')],'required':[('transaction_type','!=','bank_transfer')]}"/>
+
+
+                                <field name="card_number"
+                                       attrs="{'invisible':[('transaction_method','!=','card')],'required':[('transaction_method','=','card')]}"/>
+                                <field name="cheque_no"
+                                       attrs="{'invisible':[('transaction_method','!=','cheque')],'required':[('transaction_method','=','cheque')]}"/>
+
+                                <field name="currency_id" invisible="1"/>
+                                <field name="amount" widget="monetary"/>
+                                <field name="payment_account_id"
+                                       attrs="{'invisible':[('transaction_type','!=','bank_transfer')],'required':[('transaction_type','=','bank_transfer')]}"
+                                       widget="selection"/>
+
+
+                            </group>
+
+                            <group string="Related Account Information">
+                                <field name="account_id" widget="selection"
+                                       attrs="{'invisible':[('transaction_type','==','cash')],'required':[('transaction_method','!=','cash')]}"/>
+                                <field name="customer_id" readonly="1"/>
+                                <field name="branch_id" readonly="1"/>
+                                <field name="bank_id" readonly="1"/>
+
+                            </group>
+
+                        </group>
+
+                        <!-- Chatter -->
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids"/>
+                            <field name="activity_ids"/>
+                            <field name="message_ids"/>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- explicit search view definition -->
+
+
+        <record id="bank_transaction_view_search" model="ir.ui.view">
+            <field name="name">bank.transaction.view.search</field>
+            <field name="model">bank.transaction</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="account_title" string="Account title"
+                           filter_domain="[('account_title','ilike',self)]"/>
+
+                    <searchpanel>
+                        <field name="transaction_type" string="Transaction Type" enable_counters="1" icon="fa-money"
+                               select="multi"/>
+                        <field name="transaction_method" string="Transaction Method" enable_counters="1"
+                               icon="fa-credit-card" select="multi"/>
+                        <field name="branch_id" string="Branch Account" enable_counters="1" icon="fa-map-marker"
+                               select="multi"/>
+                        <field name="bank_id" string="Bank Account" enable_counters="1" icon=" fa-bank" select="multi"/>
+
+
+                    </searchpanel>
+                </search>
+            </field>
+        </record>
+
+
+        <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="bank_transaction_action_window">
+            <field name="name">Transactions</field>
+            <field name="res_model">bank.transaction</field>
+            <field name="view_mode">tree,form</field>
+
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first transaction
+                </p>
+            </field>
+        </record>
+
+
+        <!-- actions -->
+
+        <menuitem name="Transactions" id="bank_transaction_menu_action" parent="transaction_menu_master"
+                  action="bank_transaction_action_window"/>
+
+
+    </data>
+</odoo>

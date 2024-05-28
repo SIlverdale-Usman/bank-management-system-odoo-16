@@ -1,0 +1,174 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+
+        <record model="ir.ui.view" id="bank_customer_view_list">
+            <field name="name">bank.customer.view.list</field>
+            <field name="model">bank.customer</field>
+            <field name="arch" type="xml">
+                <tree sample="1" class="text-center">
+                    <field name="name"/>
+                    <field name="email" optional="show"/>
+                    <field name="phone_no" optional="show"/>
+                    <field name="address" optional="address"/>
+                    <field name="gender" optional="hide"/>
+                    <field name="date_of_birth" optional="hide"/>
+                    <field name="age" optional="show"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- explicit form view definition -->
+
+        <record model="ir.ui.view" id="bank_customer_view_form">
+            <field name="name">bank.customer.view.form</field>
+            <field name="model">bank.customer</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="image" widget="image" class="oe_avatar m-0"
+                               options="{'zoom': true, 'zoom_delay': 1000}"/>
+                        <div class="oe_title">
+                            <h1>
+                                <label for="name" string="Cutomer Name" class="oe_edit_only"/>
+                                <field name="name" placeholder="Name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Personal Details">
+                                <field name="email" optional="show" widget="email"/>
+                                <field name="phone_no" optional="show" widget="phone"/>
+                                <field name="address" optional="show"/>
+                                <field name="gender" optional="show"/>
+                                <field name="date_of_birth" optional="hide"/>
+                                <field name="age" optional="show"/>
+
+                            </group>
+
+                        </group>
+
+                        <notebook>
+                            <page string="Accounts" name="accounts">
+                                <field name="account_ids"/>
+                            </page>
+                        </notebook>
+
+                        <!-- Chatter -->
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids"/>
+                            <field name="activity_ids"/>
+                            <field name="message_ids"/>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_bank_customer_kanban" model="ir.ui.view">
+            <field name="name">bank.customer.view.kanban</field>
+            <field name="model">bank.customer</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="age"/>
+                    <field name="email"/>
+                    <field name="gender"/>
+
+                    <templates>
+                        <t t-name="kanban-box">
+                            <t t-set="gender" t-value="record.gender.raw_value"/>
+
+                            <div t-attf-class="oe_kanban_global_click o_kanban_record_has_image_fill">
+
+                                <field name="image" preview_image="image" widget="background_image"
+                                       class="o_kanban_image_fill_left d-block"
+                                       options="{'zoom': true, 'zoom_delay': 1000}"/>
+
+
+                                <div class="oe_kanban_details">
+                                    <div style="margin-left:15px;">
+                                        <ul>
+                                            <div style="display:flex; justify-content:space-between;">
+                                                <li class="mb4">
+                                                    <h3>
+                                                        <field name="name"/>
+                                                    </h3>
+                                                </li>
+                                                <li t-if="gender == 'male'" class="fa fa-mars"
+                                                    style="font-size:20px; color:blue" role="img"
+                                                    aria-label="Gender" title="Male"/>
+                                                <li t-if="gender == 'female'" class="fa fa-venus"
+                                                    style="font-size:20px; color:red" role="img"
+                                                    aria-label="Gender" title="Female"/>
+                                            </div>
+
+                                            <li>
+                                                <strong>Accounts </strong>
+                                                <field name="account_count"/>
+                                            </li>
+                                            <li>
+                                                <strong>E-mail </strong>
+                                                <field name="email"/>
+                                            </li>
+                                            <li>
+                                                <strong>Phone </strong>
+                                                <field name="phone_no"/>
+                                            </li>
+                                            <li>
+                                                <strong>Age </strong>
+                                                <field name="age"/>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+
+        </record>
+
+        <!-- explicit search view definition -->
+
+
+        <record id="bank_customer_view_search" model="ir.ui.view">
+            <field name="name">bank.customer.view.search</field>
+            <field name="model">bank.customer</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="Customer Name" filter_domain="[('name','ilike',self)]"/>
+
+                    <searchpanel>
+                        <field name="gender" string="Gender" enable_counters="1" icon="fa-users" select="multi"/>
+                    </searchpanel>
+                </search>
+            </field>
+        </record>
+
+
+        <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="bank_customer_action_window">
+            <field name="name">Customers</field>
+            <field name="res_model">bank.customer</field>
+            <field name="view_mode">kanban,tree,form</field>
+
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first customer
+                </p>
+            </field>
+        </record>
+
+
+        <!-- actions -->
+
+        <menuitem name="Customers" id="bank_customer_menu_action" parent="customer_menu_master"
+                  action="bank_customer_action_window"/>
+
+
+    </data>
+</odoo>
