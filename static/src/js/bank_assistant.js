@@ -5,6 +5,7 @@ var core = require('web.core');
 const { Component, useState,onWillStart } = owl;
 import {useService} from "@web/core/utils/hooks";
 
+
 function generateMarkdown(text) {
     // Headings
     text = text.replace(/^### (.*$)/gim, '<h3>$1</h3>');
@@ -49,12 +50,15 @@ export default class Assistant extends Component{
             query:{question:"",answer:""},
             queryList:[],
         });
+
         this.orm = useService("orm");
+        this.rpc = useService("rpc");
         this.model = "bank.assistant";
 
         onWillStart(async () => {
             await this.fetchChat()
         });
+
     }
 
     async fetchChat() {
@@ -65,9 +69,7 @@ export default class Assistant extends Component{
         this.buttonState = false
 
         const question = this.state.query.question;
-        const response = await this.orm.call(this.model,"generate_answer",[[]],{
-            query: question,
-        });
+        const response = await this.rpc("/bank/rpc-chatbot", {query:question});
 
         this.state.query.answer = generateMarkdown(response)
         await this.orm.create(this.model, [this.state.query])

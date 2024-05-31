@@ -15,7 +15,7 @@
 
     'category': 'Uncategorized',
     'version': '0.1',
-    'depends': ['base', 'mail', 'hr'],
+    'depends': ['base', 'mail', 'hr', 'portal'],
 
     'application': True,
     'auto_install': False,
@@ -24,11 +24,13 @@
     # always loaded
     'data': [
         'security/ir.model.access.csv',
+        'security/security_access_data_view.xml',
         'data/branch_data.xml',
         'data/account_data.xml',
         'data/transaction_data.xml',
         'data/complaint_data.xml',
         'data/mail_template_data.xml',
+        'views/portal_template.xml',
         'views/menu.xml',
         'views/bank_view.xml',
         'views/branch_view.xml',

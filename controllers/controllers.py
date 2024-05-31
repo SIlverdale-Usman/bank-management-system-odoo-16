@@ -1,21 +1,17 @@
 # -*- coding: utf-8 -*-
-# from odoo import http
+from odoo import http
+
+import google.generativeai as genai
+from md2gemini import md2gemini
+
+genai.configure(api_key="AIzaSyDPB7mgtFvpzMHKFjWMv14xiN-VvyxMBv0")
+model = genai.GenerativeModel('gemini-pro')
 
 
-# class Bank(http.Controller):
-#     @http.route('/bank/bank', auth='public')
-#     def index(self, **kw):
-#         return "Hello, world"
-
-#     @http.route('/bank/bank/objects', auth='public')
-#     def list(self, **kw):
-#         return http.request.render('bank.listing', {
-#             'root': '/bank/bank',
-#             'objects': http.request.env['bank.bank'].search([]),
-#         })
-
-#     @http.route('/bank/bank/objects/<model("bank.bank"):obj>', auth='public')
-#     def object(self, obj, **kw):
-#         return http.request.render('bank.object', {
-#             'object': obj
-#         })
+class Bank(http.Controller):
+    @http.route('/bank/rpc-chatbot', type='json', auth='user')
+    def generateResponse(self, **kw):
+        query = kw.get('query')
+        response = model.generate_content({'role': 'model',
+                                           'parts': query})
+        return md2gemini(response.text)

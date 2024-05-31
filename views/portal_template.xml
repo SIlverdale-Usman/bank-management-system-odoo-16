@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="portal_my_home" inherit_id="portal.portal_my_home">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="url">/my/tickets</t>
+                <t t-set="title">Tickets</t>
+                <t t-set="placeholder_count" t-value="'ticket_counts'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_breadcrumbs" inherit_id="portal.portal_breadcrumbs">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'tickets_list_view'" class="breadcrumb-item">Tickets</li>
+            <li t-if="page_name == 'tickets_form_view'" class="breadcrumb-item">
+                <a href="/my/tickets">Tickets</a>
+                /
+                <span t-out="ticket.name"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="ticket_list_view_portal">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Tickets</t>
+            </t>
+            <t t-call="portal.portal_table">
+                <t t-foreach="group_tickets" t-as="tickets">
+                    <thead>
+                        <tr t-if="groupby in ('account_id','state','priority')">
+                            <th class="text-center" t-if="groupby == 'account_id'" colspan="5">
+
+                                <em class="font-weight-normal text-muted" t-out="tickets['account_id'].title"/>
+                                (
+                                <t t-out="len(tickets['tickets'])"/>
+                                )
+
+                            </th>
+                            <th class="text-center" t-if="groupby == 'state'" colspan="5">
+                                <em class="font-weight-normal text-muted" t-out="tickets['state']"/>
+                                (
+                                <t t-out="len(tickets['tickets'])"/>
+                                )
+                            </th>
+                            <th class="text-center" t-if="groupby == 'priority'" colspan="5">
+                                <em class="font-weight-normal text-muted" t-out="tickets['priority']"/>
+                                (
+                                <t t-out="len(tickets['tickets'])"/>
+                                )
+                            </th>
+                        </tr>
+                        <tr class="active">
+                            <th class="text-center" t-if="groupby != 'priority'">Priority</th>
+                            <th class="text-center">Ticket No</th>
+                            <th class="text-center">Subject</th>
+                            <th class="text-center" t-if="groupby != 'account_id'">Related Account</th>
+                            <th class="text-center" t-if="groupby != 'state'">Status</th>
+                            <th class="text-center">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="tickets['tickets']" t-as="ticket">
+                            <tr>
+                                <td class="text-center" t-if="groupby != 'priority'">
+                                    <t t-out="ticket.priority.capitalize()"/>
+                                </td>
+                                <td class="text-center">
+                                    <a t-attf-href="/my/tickets/#{ticket.id}">
+                                        <t t-out="ticket.name"/>
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <t t-out="ticket.subject"/>
+                                </td>
+                                <td class="text-center" t-if="groupby != 'account_id'">
+                                    <t t-out="ticket.account_id.title"/>
+                                </td>
+                                <td class="text-center" t-if="groupby != 'state'">
+                                    <t t-out="ticket.state.replace('_', ' ').capitalize()"/>
+                                </td>
+                                <td class="text-center">
+                                    <t t-out="ticket.date_created"/>
+                                </td>
+                            </tr>
+
+                        </t>
+                    </tbody>
+                </t>
+
+            </t>
+        </t>
+    </template>
+
+    <template id="ticket_form_view_portal" inherit_id="portal.portal_sidebar">
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+            <t t-if="page_name == 'tickets_form_view'">
+                <section style="background-color: #eee;">
+                    <div class="container py-5">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="card mb-4">
+                                    <div class="card-body text-center">
+                                        <t t-if="ticket.account_id.customer_id.image">
+                                            <img t-attf-src="data:image/png;base64,{{ticket.account_id.customer_id.image}}"
+                                                 alt="avatar"
+                                                 class="rounded-circle img-fluid" style="width:150px;"/>
+                                        </t>
+                                        <t t-else="">
+                                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                                                 alt="avatar"
+                                                 class="rounded-circle img-fluid" style="width: 150px;"/>
+                                        </t>
+                                        <h5 class="my-3">
+                                            <t t-out="ticket.account_id.customer_id.name"/>
+                                        </h5>
+                                        <p class="text-muted mb-2">
+                                            <t t-out="ticket.account_id.customer_id.phone_no"/>
+                                        </p>
+                                        <p class="text-muted mb-2">
+                                            <t t-out="ticket.account_id.branch_id.name"/>
+                                        </p>
+                                        <p class="text-muted mb-2">
+                                            <t t-out="ticket.account_id.account_number"/>
+                                        </p>
+                                        <p class="text-muted mb-2">
+                                            <t t-out="ticket.account_id.bank_id.name"/>
+                                        </p>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0">Ticket No</p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">
+                                                    <t t-out="ticket.name"/>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0">Status</p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">
+                                                    <t t-out="ticket.state.replace('_', ' ').capitalize()"/>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0">Priority</p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">
+                                                    <t t-out="ticket.priority.capitalize()"/>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0">Subject</p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">
+                                                    <t t-out="ticket.subject"/>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0">Description</p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">
+                                                    <t t-out="ticket.description"/>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0">Tags</p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">
+                                                    <span t-esc="', '.join([tag.name for tag in ticket.tag_ids])"/>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <hr/>
+
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0">Creation Date</p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">
+                                                    <t t-out="ticket.date_created"/>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container py-5">
+                        <h1>History</h1>
+                        <t t-call="portal.message_thread">
+                            <t t-set="object" t-value="ticket"/>
+                        </t>
+                    </div>
+                </section>
+            </t>
+        </xpath>
+    </template>
+
+
+</odoo>

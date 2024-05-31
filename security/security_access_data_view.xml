@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!--record rules-->
+    <record id="employee_profile_record_rule" model="ir.rule">
+        <field name="name">Access employee tickets</field>
+        <field name="model_id" ref="bank.model_bank_complaint"/>
+        <field name="domain_force">[('assigned_to.name','=',user.name)]</field>
+        <field name="groups"
+               eval="[(4, ref('bank.access_bank_employee_group'))]"/>
+    </record>
+
+    <record id="bank_category" model="ir.module.category">
+        <field name="name">Bank</field>
+    </record>
+
+    <record id="bank_employee_category" model="ir.module.category">
+        <field name="name">Bank Employee</field>
+        <field name="parent_id" ref="bank.bank_category"/>
+
+    </record>
+
+    <record id="access_employee_low_level_group" model="res.groups">
+        <field name="name">Bank Employee Low Level Group</field>
+        <field name="category_id" ref="bank.bank_employee_category"/>
+    </record>
+
+    <record id="access_employee_mid_level_group" model="res.groups">
+        <field name="name">Bank Employee Mid Level Group</field>
+        <field name="category_id" ref="bank.bank_employee_category"/>
+        <field name="implied_ids"
+               eval="[(6,0,[ref('bank.access_employee_low_level_group')])]"/>
+    </record>
+
+    <record id="access_employee_admin_level_group" model="res.groups">
+        <field name="name">Bank Employee Admin Level Group</field>
+        <field name="category_id" ref="bank.bank_employee_category"/>
+        <field name="implied_ids"
+               eval="[(6,0,[ref('bank.access_employee_mid_level_group')])]"/>
+    </record>
+
+    <record id="access_bank_employee_group" model="res.groups">
+        <field name="name">Employee Ticket Group</field>
+    </record>
+
+</odoo>
