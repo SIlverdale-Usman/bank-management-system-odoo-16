@@ -1,36 +1,42 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <template id="customer_card_report_template">
         <t t-call="web.basic_layout">
             <div class="page">
                 <t t-foreach="docs" t-as="doc">
-
-                    <div style="display:flex; justify-content:center; align-items:center; ">
-                        <div style="height:160pt; border:1pt solid black; border-collapse:separate; border-radius:8pt; padding:20px;">
-                            <div style="text-align:right;">
-                                <p t-esc="doc.bank_id.name"/>
-                            </div>
-
-                            <div style="display:flex; justify-content:center; align-items:center;">
-                                <h4 t-esc="doc.card_number_formatted"/>
-
-                            </div>
-
-                            <img t-att-src="'/report/barcode/EAN13/%s'%(doc.account_id)" width="400" height="30"
-                                 alt="Barcode"/>
-
-                            <div style="display:flex; justify-content:center; align-items:center; margin-top:10px; height:30px;">
-                                <p style="margin-right:20px;">Valid</p>
-                                <p t-esc="doc.expiry_date"/>
-                            </div>
-
-                            <div style="display:flex; justify-content:space-between; align-items:center;">
-                                <h5 t-esc="doc.title"/>
-                                <h5 t-if="doc.card_type == 'master'">MASTER</h5>
-                                <h5 t-if="doc.card_type == 'visa'">VISA</h5>
-                            </div>
-
-                        </div>
+                    <div class="col-md-6">
+                        <table style="width:290pt; height:150pt;
+                            border:1pt solid black;
+                            border-collapse:separate;
+                            border-radius:8pt; margin:5pt;
+                            padding-left:10pt;padding-right:10pt;">
+                            <tr>
+                                <td style="position: relative;
+                                    top: 25%;">
+                                    <img t-att-src="'/report/barcode/QR/%s'%(doc.account_id)"
+                                         style="height:75pt;width:75pt"
+                                         alt="Barcode"/>
+                                </td>
+                                <td style="margin-left:5pt;">
+                                    <p>
+                                        <strong>Bank :</strong>
+                                        <t t-esc="doc.bank_id.name"/>
+                                    </p>
+                                    <p>
+                                        <strong>Card :</strong>
+                                        <t t-esc="doc.card_number_formatted"/>
+                                    </p>
+                                    <p>
+                                        <strong>Valid Till :</strong>
+                                        <t t-esc="doc.expiry_date"/>
+                                    </p>
+                                    <p>
+                                        <strong>Holder :</strong>
+                                        <t t-esc="doc.title"/>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </t>
             </div>

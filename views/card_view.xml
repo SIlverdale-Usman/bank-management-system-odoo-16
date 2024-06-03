@@ -14,6 +14,9 @@
                     <field name="card_limit" optional="show"/>
                     <field name="expiry_date" optional="hide"/>
                     <field name="card_number" optional="hide"/>
+                    <field name="state" widget="badge" decoration-success="state == 'active'"
+                           decoration-danger="state == 'block'"
+                    />
                 </tree>
             </field>
         </record>
@@ -51,6 +54,7 @@
                                 <field name="expiry_date" readonly="1"/>
                                 <field name="card_number" readonly="1"/>
                                 <field name="bank_id" readonly="1"/>
+                                <field name="state" readonly="1"/>
 
                             </group>
 
@@ -94,6 +98,7 @@
                         <field name="card_type" string="Card Type" enable_counters="1" icon="fa-credit-card-alt"
                                select="multi"/>
                         <field name="bank_id" string="Bank" enable_counters="1" icon="fa-bank" select="multi"/>
+                        <field name="state" string="Card Status" enable_counters="1" icon="fa-ban" select="multi"/>
                     </searchpanel>
                 </search>
             </field>

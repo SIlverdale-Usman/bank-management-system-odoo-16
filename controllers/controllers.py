@@ -12,6 +12,5 @@ class Bank(http.Controller):
     @http.route('/bank/rpc-chatbot', type='json', auth='user')
     def generateResponse(self, **kw):
         query = kw.get('query')
-        response = model.generate_content({'role': 'model',
-                                           'parts': query})
+        response = model.generate_content(query)
         return md2gemini(response.text)

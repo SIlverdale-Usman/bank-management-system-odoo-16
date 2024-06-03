@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Email template for reset password -->
+        <record id="resolve_complaint_mail_template" model="mail.template">
+            <field name="name">Resolve Ticket Template</field>
+            <field name="model_id" ref="bank.model_bank_complaint"/>
+            <field name="subject">Complaint Resolution Notification - Ticket: {{object.name}}</field>
+
+            <field name="email_from">{{ object.account_id.bank_id.email }}</field>
+            <field name="email_to">{{ object.account_id.customer_id.email }}</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0"
+                       style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                   style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                                <tbody>
+                                    <!-- HEADER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                                   style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle">
+                                                        <br/>
+                                                        <span style="font-size: 20px; font-weight: bold;">
+                                                            <t t-out="object.name"/>
+                                                        </span>
+                                                    </td>
+                                                    <td valign="middle" align="right">
+                                                        <img t-attf-src="/logo.png?company={{ user.company_id.id }}"
+                                                             style="padding: 0px; margin: 0px; height: auto; width: 80px;"
+                                                             t-att-alt="user.company_id.name"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2" style="text-align:center;">
+                                                        <hr width="100%"
+                                                            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- CONTENT -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                                   style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="top" style="font-size: 13px;">
+                                                        <div>
+                                                            Dear
+                                                            <t t-out="object.account_id.customer_id.name"/>,
+                                                            <br/>
+                                                            <br/>
+                                                            We are pleased to inform you that your complaint with the
+                                                            reference number
+                                                            <strong t-out="object.name"/>
+                                                            has been resolved.
+                                                            <br/>
+                                                            <br/>
+                                                            
+                                                            <p>
+                                                                <strong>Complaint Details:</strong>
+                                                            </p>
+                                                            <strong>Ticket Number :</strong>
+                                                            <t t-out="object.name"/>
+                                                            <br/>
+
+                                                            <strong>Subject :</strong>
+                                                            <t t-out="object.subject"/>
+                                                            <br/>
+
+                                                            <strong>Description :</strong>
+                                                            <t t-out="object.description"/>
+                                                            <br/>
+
+                                                            <br/>
+                                                            <p>If you have any further questions or need additional
+                                                                assistance, please do not hesitate to contact our
+                                                                support team.
+                                                            </p>
+
+                                                            <br/>
+                                                            <p>Thank you for your patience and understanding</p>
+                                                            <br/>
+                                                            <br/>
+                                                            <p>Best regards</p>
+                                                            <br/>
+                                                            Customer Service Team
+                                                            <br/>
+                                                            <br/>
+
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;">
+                                                        <hr width="100%"
+                                                            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        object
+                                    </tr>
+                                    <!-- FOOTER -->
+                                    <tr>
+                                        <td align="center" style="min-width: 590px;">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                                                   style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                                <tr>
+                                                    <td valign="middle" align="left">
+                                                        <t t-out="object.account_id.bank_id.name or ''"></t>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="middle" align="left">
+                                                        <t t-out="object.account_id.branch_id.name or ''"></t>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="middle" align="left" style="opacity: 0.7;">
+                                                        <t t-out="object.account_id.bank_id.phone_no or ''">
+                                                        </t>
+
+                                                        <t t-if="object.account_id.bank_id.email">
+                                                            |
+                                                            <t t-out="object.account_id.bank_id.email or ''">
+                                                            </t>
+                                                        </t>
+                                                        <t t-if="object.account_id.bank_id.website">
+                                                            |
+                                                            <t t-out="object.account_id.bank_id.website or ''">
+                                                            </t>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

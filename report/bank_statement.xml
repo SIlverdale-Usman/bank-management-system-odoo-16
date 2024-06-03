@@ -2,8 +2,8 @@
 <odoo>
     <template id="customer_bank_statement_report_template">
         <t t-call="web.basic_layout">
-            <div class="page">
-                <t t-foreach="docs" t-as="doc">
+            <t t-foreach="docs" t-as="doc">
+                <div class="page">
                     <div class="oe_structure"/>
                     <h3>
                         <span t-field="doc.bank_id.name"/>
@@ -103,8 +103,9 @@
                         </table>
                     </t>
 
-                </t>
-            </div>
+                </div>
+            </t>
+
         </t>
 
     </template>

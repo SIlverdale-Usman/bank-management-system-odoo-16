@@ -67,8 +67,12 @@ class BankCard(models.Model):
                 record.card_number_formatted = ' '
 
     def action_block(self):
+        template = self.env.ref("bank.card_template_mail_template")
+
         for rec in self:
             if rec.state == "active":
+                print(template)
+                template.send_mail(rec.id, force_send=True)
                 rec.state = 'block'
             else:
                 raise ValidationError(_("Card already blocked"))

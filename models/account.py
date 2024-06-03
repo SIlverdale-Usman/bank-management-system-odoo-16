@@ -82,3 +82,50 @@ class BankAccount(models.Model):
             'domain': [("account_id", "=", self.id)],
             'target': 'current'
         }
+
+
+class PartnerXlsx(models.AbstractModel):
+    _name = 'report.bank.customer_bank_statement_report_template_xlsx'
+    _inherit = 'report.report_xlsx.abstract'
+
+    def generate_xlsx_report(self, workbook, data, account):
+        for rec in account:
+            row = 1
+            col = 0
+            report_name = rec.title
+            sheet = workbook.add_worksheet(report_name[:31])
+
+            for transaction in rec.transaction_ids:
+                # style
+
+                sheet.set_column('A:A', 15)
+                sheet.set_column('B:B', 20)
+                sheet.set_column('C:D', 25)
+                sheet.set_column('E:F', 20)
+
+                date_format = workbook.add_format({'num_format': 'd mmmm yyyy', 'align': 'center'})
+                heading_format = workbook.add_format({'bold': True, 'align': 'center', 'bg_color': 'yellow'})
+                data_format = workbook.add_format({'align': 'center'})
+                # headings
+                sheet.write(0, 0, "Transaction No", heading_format)
+                sheet.write(0, 1, "Date", heading_format)
+                sheet.write(0, 2, "Description", heading_format)
+                sheet.write(0, 3, "Transaction Type", heading_format)
+                sheet.write(0, 4, "Transaction Method", heading_format)
+                sheet.write(0, 5, "Amount", heading_format)
+
+                # data
+                sheet.write(row, col, transaction.transaction_no, data_format)
+                col += 1
+                sheet.write(row, col, transaction.date, date_format)
+                col += 1
+                sheet.write(row, col, transaction.title, data_format)
+                col += 1
+                sheet.write(row, col, transaction.transaction_type, data_format)
+                col += 1
+                sheet.write(row, col, transaction.transaction_method, data_format)
+                col += 1
+                sheet.write(row, col, transaction.amount, data_format)
+
+                row += 1
+                col = 0

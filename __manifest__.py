@@ -15,7 +15,7 @@
 
     'category': 'Uncategorized',
     'version': '0.1',
-    'depends': ['base', 'mail', 'hr', 'portal'],
+    'depends': ['base', 'mail', 'hr', 'portal', 'report_xlsx'],
 
     'application': True,
     'auto_install': False,
@@ -30,6 +30,9 @@
         'data/transaction_data.xml',
         'data/complaint_data.xml',
         'data/mail_template_data.xml',
+        'data/mail_block_card_template.xml',
+        'data/mail_resolve_complaint_template_data.xml',
+        'data/mail_cancel_complaint_template_data.xml',
         'views/portal_template.xml',
         'views/menu.xml',
         'views/bank_view.xml',
@@ -47,6 +50,7 @@
         'views/loan_payment_view.xml',
         'report/bank_card.xml',
         'report/bank_statement.xml',
+        'report/bank_statement_xlsx.xml',
     ],
     'assets': {
         'web.assets_backend': [

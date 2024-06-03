@@ -36,13 +36,17 @@ class BankComplaint(models.Model):
         return super(BankComplaint, self).create(vals)
 
     def action_in_progress(self):
+        template = self.env.ref("bank.complaint_mail_template")
         for rec in self:
             if rec.state == "draft":
+                template.send_mail(rec.id, force_send=True)
                 rec.state = 'in_progress'
 
     def action_resolved(self):
+        template = self.env.ref("bank.resolve_complaint_mail_template")
         for rec in self:
             if rec.state == "in_progress":
+                template.send_mail(rec.id, force_send=True)
                 rec.state = 'resolved'
         return {
             'effect': {
@@ -53,15 +57,13 @@ class BankComplaint(models.Model):
         }
 
     def action_cancel(self):
+        template = self.env.ref("bank.resolve_complaint_mail_template")
+
         for rec in self:
             if rec.state == "draft" or rec.state == "in_progress":
-                rec.state = 'cancelled'
+                template.send_mail(rec.id, force_send=True)
 
-    def action_send_email(self):
-        template = self.env.ref("bank.complaint_mail_template")
-        print(template)
-        for rec in self:
-            template.send_mail(rec.id, force_send=True)
+                rec.state = 'cancelled'
 
 
 class ComplaintTag(models.Model):
