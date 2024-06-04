@@ -47,7 +47,7 @@
     <record id="customer_card_report_action_template" model="ir.actions.report">
         <field name="name">Customer Credit Card</field>
         <field name="model">bank.card</field>
-        <field name="report_type">qweb-html</field>
+        <field name="report_type">qweb-pdf</field>
         <field name="report_name">bank.customer_card_report_template</field>
         <field name="report_file">bank.customer_card_report_template</field>
         <field name="print_report_name">'Customer Card'</field>

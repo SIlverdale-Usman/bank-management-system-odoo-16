@@ -16,7 +16,10 @@ class BankComplaint(models.Model):
         ('cancelled', 'Cancelled'),
     ], string='Status', default='draft', required=True)
     account_id = fields.Many2one('bank.account', string='Related Account', required=True)
+
     date_created = fields.Datetime(string='Date Created', default=fields.Datetime.now)
+    duration = fields.Float(string="Duration", tracking=4)
+
     priority = fields.Selection([
         ('normal', 'Normal'),
         ('urgent', 'Urgent'),

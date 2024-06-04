@@ -52,7 +52,6 @@ class BankCard(models.Model):
         vals['expiry_date'] = self._get_default_expiry_date()
         res = super(BankCard, self).create(vals)
 
-        print(vals)
         return res
 
     @api.depends('card_number')
@@ -68,10 +67,8 @@ class BankCard(models.Model):
 
     def action_block(self):
         template = self.env.ref("bank.card_template_mail_template")
-
         for rec in self:
             if rec.state == "active":
-                print(template)
                 template.send_mail(rec.id, force_send=True)
                 rec.state = 'block'
             else:

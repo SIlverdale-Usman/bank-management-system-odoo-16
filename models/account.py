@@ -61,8 +61,6 @@ class BankAccount(models.Model):
         return [(record.id, "%s, %s" % (record.account_number, record.title)) for record in self]
 
     def action_view_customer(self):
-        print("customer action")
-        print(self.id)
         return {
             'name': _('Account Holder'),
             'type': 'ir.actions.act_window',
@@ -73,7 +71,6 @@ class BankAccount(models.Model):
         }
 
     def action_view_card(self):
-        print("card action")
         return {
             'name': _('Related Card'),
             'type': 'ir.actions.act_window',
@@ -90,29 +87,57 @@ class PartnerXlsx(models.AbstractModel):
 
     def generate_xlsx_report(self, workbook, data, account):
         for rec in account:
-            row = 1
+
+            row = 2
             col = 0
+
             report_name = rec.title
             sheet = workbook.add_worksheet(report_name[:31])
+            sheet.set_column('A:A', 15)
+            sheet.set_column('B:B', 20)
+            sheet.set_column('C:D', 25)
+            sheet.set_column('E:F', 20)
+
+            date_format = workbook.add_format({'num_format': 'd mmmm yyyy', 'align': 'center'})
+            heading_format_1 = workbook.add_format({'bold': True, 'align': 'center', 'bg_color': 'yellow'})
+            heading_format = workbook.add_format({'bold': True, 'align': 'center', 'bg_color': 'red'})
+            data_format = workbook.add_format({'align': 'center'})
+
+            sheet.merge_range(0, 0, 0, 5, "Account Details", heading_format_1)
+
+            sheet.write(1, 0, "Account No", heading_format)
+            sheet.write(1, 1, "Customer", heading_format)
+            sheet.write(1, 2, "Account Type", heading_format)
+            sheet.write(1, 3, "Bank", heading_format)
+            sheet.write(1, 4, "Branch", heading_format)
+            sheet.write(1, 5, "Opening Date", heading_format)
+
+            sheet.write(row, col, rec.account_number, data_format)
+            col += 1
+            sheet.write(row, col, rec.customer_id.name, data_format)
+            col += 1
+            sheet.write(row, col, rec.account_type.capitalize(), data_format)
+            col += 1
+            sheet.write(row, col, rec.bank_id.name, data_format)
+            col += 1
+            sheet.write(row, col, rec.branch_id.name, data_format)
+            col += 1
+            sheet.write(row, col, rec.opening_date, date_format)
+
+            row = 6
+            col = 0
 
             for transaction in rec.transaction_ids:
                 # style
 
-                sheet.set_column('A:A', 15)
-                sheet.set_column('B:B', 20)
-                sheet.set_column('C:D', 25)
-                sheet.set_column('E:F', 20)
-
-                date_format = workbook.add_format({'num_format': 'd mmmm yyyy', 'align': 'center'})
-                heading_format = workbook.add_format({'bold': True, 'align': 'center', 'bg_color': 'yellow'})
-                data_format = workbook.add_format({'align': 'center'})
+                sheet.merge_range(4, 0, 4, 5, "Transaction Details", heading_format_1)
                 # headings
-                sheet.write(0, 0, "Transaction No", heading_format)
-                sheet.write(0, 1, "Date", heading_format)
-                sheet.write(0, 2, "Description", heading_format)
-                sheet.write(0, 3, "Transaction Type", heading_format)
-                sheet.write(0, 4, "Transaction Method", heading_format)
-                sheet.write(0, 5, "Amount", heading_format)
+                sheet.write(5, 0, "Transaction No", heading_format)
+                sheet.write(5, 1, "Date", heading_format)
+                sheet.write(5, 2, "Description", heading_format)
+                sheet.write(5, 3, "Transaction Type", heading_format)
+                sheet.write(5, 4, "Transaction Method", heading_format)
+                sheet.write(5, 5, "Amount", heading_format)
 
                 # data
                 sheet.write(row, col, transaction.transaction_no, data_format)
@@ -121,11 +146,11 @@ class PartnerXlsx(models.AbstractModel):
                 col += 1
                 sheet.write(row, col, transaction.title, data_format)
                 col += 1
-                sheet.write(row, col, transaction.transaction_type, data_format)
+                sheet.write(row, col, transaction.transaction_type.capitalize(), data_format)
                 col += 1
-                sheet.write(row, col, transaction.transaction_method, data_format)
+                sheet.write(row, col, transaction.transaction_method.capitalize(), data_format)
                 col += 1
-                sheet.write(row, col, transaction.amount, data_format)
+                sheet.write(row, col, f"$ {transaction.amount}", data_format)
 
                 row += 1
                 col = 0

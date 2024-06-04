@@ -120,6 +120,22 @@
             </field>
         </record>
 
+        <!-- explicit calender view definition -->
+
+        <record id="bank_complaint_view_calender" model="ir.ui.view">
+            <field name="name">bank.complaint.view.calender</field>
+            <field name="model">bank.complaint</field>
+            <field name="arch" type="xml">
+                <calendar string="Tickets" date_start="date_created" mode="month" date_delay="duration" color="state"
+                          quick_add="False" hide_time="True"
+                          form_view_id="%(bank.bank_complaint_view_form)d"
+                          event_open_popup="True" event_limit="5">
+                    <field name="customer_id" filters="1"/>
+                    <field name="state" filters="1"/>
+                </calendar>
+            </field>
+        </record>
+
         <!-- explicit search view definition -->
 
 
@@ -130,13 +146,10 @@
                 <search>
                     <field name="account_id" string="Account Title"
                            filter_domain="[('account_id','ilike',self)]"/>
-
                     <searchpanel>
                         <field name="branch_id" string="Branch Account" enable_counters="1" icon="fa-map-marker"
                                select="multi"/>
                         <field name="bank_id" string="Bank Account" enable_counters="1" icon=" fa-bank" select="multi"/>
-
-
                     </searchpanel>
                 </search>
             </field>
@@ -148,7 +161,7 @@
         <record model="ir.actions.act_window" id="bank_complaint_action_window">
             <field name="name">Tickets</field>
             <field name="res_model">bank.complaint</field>
-            <field name="view_mode">tree,form,activity</field>
+            <field name="view_mode">tree,form,activity,calendar</field>
 
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">

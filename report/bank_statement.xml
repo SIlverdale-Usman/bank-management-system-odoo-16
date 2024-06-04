@@ -113,7 +113,7 @@
     <record id="customer_account_report_action_template" model="ir.actions.report">
         <field name="name">Customer Bank Statement</field>
         <field name="model">bank.account</field>
-        <field name="report_type">qweb-html</field>
+        <field name="report_type">qweb-pdf</field>
         <field name="report_name">bank.customer_bank_statement_report_template</field>
         <field name="report_file">bank.customer_bank_statement_report_template</field>
         <field name="print_report_name">'Customer Bank Statement'</field>
