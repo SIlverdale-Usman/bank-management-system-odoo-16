@@ -73,9 +73,9 @@ export default class Assistant extends Component{
 
         this.state.query.answer = generateMarkdown(response)
         await this.orm.create(this.model, [this.state.query])
-        this.buttonState = true
 
         await this.fetchChat()
+        this.buttonState = true
 
     }
 };

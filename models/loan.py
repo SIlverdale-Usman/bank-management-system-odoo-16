@@ -1,5 +1,6 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+from datetime import date, timedelta
 
 
 class LoanType(models.Model):
@@ -50,6 +51,10 @@ class LoanAccount(models.Model):
     ], string='Status', readonly=True, copy=False, tracking=True, default='draft')
     bank_id = fields.Many2one("bank.bank", string="Bank", tracking=4, required=True)
     currency_id = fields.Many2one("res.currency", string="Currency", default=lambda self: self.env.company.currency_id)
+    paid_date = fields.Date(string="Paid Date")
+    total_paid = fields.Float(string='Total Paid', compute='_compute_total_paid', store=True)
+    remaining_amount = fields.Float(string='Remaining Amount', compute='_compute_remaining_amount', store=True)
+    loan_payment_ids = fields.One2many('bank.loan.payment', 'loan_account_id', string='Loan Payments')
 
     @api.model
     def create(self, vals):
@@ -73,14 +78,36 @@ class LoanAccount(models.Model):
             else:
                 loan.monthly_payment = 0
 
+    @api.depends('loan_amount', 'loan_payment_ids.amount')
+    def _compute_total_paid(self):
+        for loan in self:
+            total_paid = sum(payment.amount for payment in loan.loan_payment_ids)
+            loan.total_paid = total_paid
+
+    @api.depends('loan_amount', 'total_paid')
+    def _compute_remaining_amount(self):
+        for loan in self:
+            loan.remaining_amount = loan.loan_amount - loan.total_paid
+
+    def check_if_loan_paid(self):
+        for loan in self:
+            if loan.state == 'approved' and loan.total_paid >= loan.loan_amount:
+                loan.state = 'paid'
+                loan.paid_date = date.today()
+
     def action_approved(self):
+        template = self.env.ref("bank.loan_request_mail_template")
         for rec in self:
             if rec.state == "draft":
+                template.send_mail(rec.id, force_send=True)
                 rec.state = 'approved'
 
     def action_paid(self):
+        template = self.env.ref("bank.loan_request_accept_mail_template")
         for rec in self:
             if rec.state == "approved":
+                template.send_mail(rec.id, force_send=True)
+                rec.paid_date = date.today()
                 rec.state = 'paid'
         return {
             'effect': {
@@ -91,9 +118,24 @@ class LoanAccount(models.Model):
         }
 
     def action_reject(self):
+        template = self.env.ref("bank.loan_request_cancel_mail_template")
+
         for rec in self:
             if rec.state == "draft" or rec.state == "approved":
+                template.send_mail(rec.id, force_send=True)
                 rec.state = 'cancelled'
+
+    @api.model
+    def send_loan_payment_reminder(self):
+        today = date.today()
+        overdue_loans = self.search([
+            ('state', '=', 'approved'),
+            ('loan_payment_ids.payment_date', '<', today - timedelta(days=30))
+        ])
+        print("hello")
+        template = self.env.ref('bank.loan_payment_reminder_mail_template')
+        for loan in overdue_loans:
+            template.send_mail(loan.id, force_send=True)
 
 
 class LoanPayment(models.Model):
@@ -133,6 +175,5 @@ class LoanPayment(models.Model):
     @api.model
     def create(self, vals):
         record = super(LoanPayment, self).create(vals)
-        record._compute_loan_paid()
-        record._compute_remaining_amount()
+        record.loan_account_id.check_if_loan_paid()
         return record

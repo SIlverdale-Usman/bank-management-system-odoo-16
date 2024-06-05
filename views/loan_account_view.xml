@@ -63,6 +63,8 @@
                                 <field name="loan_type_id" widget="selection" domain="[('bank_id', '=', bank_id)]"/>
                                 <field name="interest_rate"/>
                                 <field name="term_years"/>
+                                <field name="paid_date"
+                                       attrs="{'invisible':[('state','!=','paid')]}"/>
                             </group>
 
                             <group string="Loan Account Information">
