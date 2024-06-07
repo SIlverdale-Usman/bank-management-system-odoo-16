@@ -90,6 +90,8 @@ class LoanAccount(models.Model):
             loan.remaining_amount = loan.loan_amount - loan.total_paid
 
     def check_if_loan_paid(self):
+        template = self.env.ref("bank.loan_request_accept_mail_template")
+
         for loan in self:
             if loan.state == 'approved' and loan.total_paid >= loan.loan_amount:
                 loan.state = 'paid'
@@ -107,8 +109,6 @@ class LoanAccount(models.Model):
         for rec in self:
             if rec.state == "approved":
                 template.send_mail(rec.id, force_send=True)
-                rec.paid_date = date.today()
-                rec.state = 'paid'
         return {
             'effect': {
                 'fadeout': 'slow',

@@ -65,6 +65,9 @@
                                 <field name="term_years"/>
                                 <field name="paid_date"
                                        attrs="{'invisible':[('state','!=','paid')]}"/>
+
+                                <field name="total_paid"/>
+                                <field name="remaining_amount"/>
                             </group>
 
                             <group string="Loan Account Information">
@@ -76,6 +79,12 @@
 
 
                             </group>
+
+                            <notebook>
+                                <page string="Loan Payments" name="Payments">
+                                    <field name="loan_payment_ids"/>
+                                </page>
+                            </notebook>
 
                         </group>
 
